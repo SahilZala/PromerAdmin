@@ -1,0 +1,90 @@
+
+.create-product-body{
+    
+    padding: 10px;
+}
+
+.create-product-body .create-product-form .phase1{
+    flex: 1;
+}
+
+.create-product-body .create-product-form .phase2{
+    
+    display: flex;
+    text-align: right;
+}
+
+.create-product-body .create-product-form .create-product-title{
+    margin: 15px;
+    font-family: var(--main-font);
+    color: var(--main-color-black);
+    font-weight: 500;
+    font-size: 30px;
+
+}
+
+.create-product-body .create-product-form header{
+    display: flex;
+    align-items: center;
+
+    border-bottom: 1px var(--main-color-light-grey) solid;
+
+}
+
+.create-product-body .create-product-form body{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.create-product-body .create-product-form .product-section-style{
+    margin: 15px;
+}
+
+.create-product-body .create-product-form .product-section-style label{
+    margin-left: 5px;
+    font-family: var(--main-font);
+    display: flex;
+    font-size: 20px;
+    text-align: center;
+    align-items: center; 
+}
+.create-product-body .create-product-form .product-section-style  #title{
+    margin-right: 5px;
+    color: white;
+    background-color: var(--main-color-black);
+    shape-outside: circle();
+    clip-path: circle();
+    padding: 10px;
+    font-size: 15px;
+    font-family: var(--main-font);
+}
+
+
+
+
+
+
+
+.create-product-body .create-product-form body #phase1{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border-right: 1px var(--main-color-light-grey) dashed;
+}
+
+.create-product-body .create-product-form body #phase2{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border-left: 1px var(--main-color-light-grey) dashed;
+}
+
+.create-product-body .create-product-form .product-section-style img{
+    margin: 5px;
+    height: 200px;
+    width: 175px;
+    flex-wrap: wrap;
+
+
+}

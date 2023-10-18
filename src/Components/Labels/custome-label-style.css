@@ -1,0 +1,8 @@
+.custome-label-style{
+    color: var(--regular-color-black);
+    font-family: var(--main-font);
+    font-size: 18px;
+    
+    font-weight: 400;
+    margin: 5px;
+}

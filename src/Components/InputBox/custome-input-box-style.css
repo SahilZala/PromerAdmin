@@ -1,0 +1,14 @@
+.custome-input-box-style{
+    padding: 10px;
+    font-family: var(--main-font);
+    font-size: 15px;
+    border-radius: 5px;
+    border: 1px grey solid;
+    margin: 5px;
+    width: 500px;
+    font-weight: 300;
+}
+
+.custome-input-box-style:focus{
+    outline-color: var(--secondary-color-blue);
+}

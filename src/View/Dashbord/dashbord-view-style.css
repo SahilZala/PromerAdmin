@@ -1,0 +1,12 @@
+.main-space {
+    transition: .5s;  
+    flex: 2;
+}
+
+.main{
+    height: 100%;
+    flex: 1;
+    display: flex;  
+}
+
+  

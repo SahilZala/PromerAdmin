@@ -1,0 +1,14 @@
+#custome-submit-button-style{
+    margin: 10px;
+    padding: 12px;
+    border-radius: 5px;
+    border: 0px;
+    font-size: 15px;
+    font-family: var(--main-font);
+    background-color: var(--secondary-color-blue);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

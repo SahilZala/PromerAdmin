@@ -1,0 +1,12 @@
+.brand-name-style{
+    color: var(--main-color-pich);
+    font-family: var(--brand-font);
+    font-size: 20px;
+    letter-spacing: 1px;
+    padding: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 2.5px;
+    margin-left: 2.5px;
+    font-size: 20px;
+}
