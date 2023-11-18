@@ -7,7 +7,7 @@ export default class CustomeSideBar extends React.Component {
         return (
             <div style={{
                 width: this.props.width
-            }} class="custome-sidebar-style">
+            }} className="custome-sidebar-style">
                 <div style={{height: '30px'}} />
                 {
                     this.props.itemData.map((d,index) =>

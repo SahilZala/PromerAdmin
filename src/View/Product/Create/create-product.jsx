@@ -5,22 +5,79 @@ import CustomeClearButton from '../../../Components/Buttons/custome-clear-button
 import CustomeLabel from '../../../Components/Labels/custome-label';
 import CustomeInputBox from '../../../Components/InputBox/custome-input-box';
 import CustomeTextareaBox from '../../../Components/InputBox/custome-textarea-box';
-import axios from 'axios';
+// import axios from 'axios';
 import CustomeSelector from '../../../Components/Selector/custome-selection';
-
+// import ProductDto from '../../../Dto/product_dto';
+import { ProductTransaction } from '../../../Transaction/product_transaction';
+import ProductImages from '../../../Transaction/product_images';
 export default class CreateProduct extends React.Component {
+    
     constructor(props){
         super(props);
 
+        
+        this.mainCategory = []
+
+        this.subCategory = []
+
         this.state = {
+            articalNo: 0,
             title: '',
             subTitle: '',
             description: '',
             moreInfo: '',
             realPrice: 0.0,
             discountedPrice: 0.0,
-            productImages: []
+            productImages: [],
+            productImageUrls: [],
+            uploadProgress: {},
+            gender: {
+                id: "0",
+                title: "MALE"
+            },
+            mainCategory: {},
+            subCategory: {},
+            productSize: {},
+            
+            genderList: [
+                {
+                    id: "0",
+                    title: "MALE"
+                },
+                {
+                    id : "1",
+                    title: "FEMALE"
+                }
+            ],
+            mainCategoryList: [],
+            subCategoryList: [],
+            productSizeList:[],
+            brandName: "",
+            seller: "",
+            manufacturer: ""
+
         }
+
+       
+
+    }
+    componentDidMount(){
+        ProductTransaction.getMainCategory()
+        .then((data) => data.json().then((value) => this.setState({
+            mainCategory: value[0],
+            mainCategoryList: value, 
+            subCategoryList: value[0].subCategory,
+            subCategory: value[0].subCategory[0]
+        })))
+        .catch((error) => console.log(" errr "+error));
+
+        ProductTransaction.getSizeCategory()
+        .then((data) => data.json().then((value) => this.setState(
+            {
+                productSizeList: value,
+                productSize: value[0]
+        })))
+        .catch((error) => console.log(" errr "+error));
     }
     render() {
         return (
@@ -38,23 +95,26 @@ export default class CreateProduct extends React.Component {
                     </header>
 
 
-                    <body>
+                    <section style={{display: 'flex'}}>
                         <section id='phase1'>
                             {this.productDetails()}
                             {this.productPricing()}
                         </section>
                         <section id='phase2'>
-                            {this.productVariant()}
                             {this.pickImages()}
+                            {this.productVariant()}
+                            {this.productOrganization()}
+                            
+                           
                         </section>
-                    </body>
+                    </section>
 
                 </form>
             </section>
         );
     }
 
-    handleSubmit = (event) => { console.log(event); console.log(this.state); event.preventDefault(); this.createProduct();}
+    handleSubmit = (event) => { event.preventDefault(); this.checkValidity(); }
 
 
     productDetails = () => {
@@ -68,6 +128,12 @@ export default class CreateProduct extends React.Component {
                     Product Details
                 </label>
             </div>
+            <br />
+            <span id='title-box'>
+                <CustomeLabel>Artical No.<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeInputBox onChange={this.onArticalNoChange} type="number" placeholder="Artical No"></CustomeInputBox>
+            </span>
+            <br />
             <br />
             <span id='title-box'>
                 <CustomeLabel>Title<span style={{ color: 'red' }}>*</span></CustomeLabel>
@@ -113,11 +179,29 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='discounted-price-box'>
                 <CustomeLabel>Discounted Price<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
+                <CustomeInputBox  onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
             </span>
             
         </section>
     }
+
+    onFileChange = (val) => {
+        var data = [];
+        console.log(val.target.files);
+
+        var prog = new Map();
+        for(var v = 0;v< val.target.files.length;v++){
+            data.push(val.target.files[v]);
+            prog.set(v,0);
+        }
+
+        console.log(prog);
+        this.setState({
+            productImages: data,
+            uploadProgress: prog
+        });
+    }
+
 
     pickImages = () => {
         return <section className='product-section-style'>
@@ -159,102 +243,132 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Select gender<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector/>
+                <CustomeSelector onChange={(data)=>{
+                    console.log(data);
+                    this.setState({
+                        gender: data
+                    });
+                }} options={this.state.genderList}/>
             </span>
             <br />
             <br />
-           
+            <span id='real-price-box'>
+                <CustomeLabel>Main category<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeSelector onChange={(data)=>this.setState({
+                    mainCategory: data,
+                    subCategoryList: data.subCategory,
+                    subCategory: data.subCategory[0]
+                })} options={this.state.mainCategoryList}/>
+            </span>
+            <br />
+            <br />
+            <span id='real-price-box'>
+                <CustomeLabel>Sub category<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeSelector onChange={(data)=>this.setState({
+                    subCategory: data,
+                })} options={this.state.subCategoryList}/>
+            </span>
+            <br />
+            <br />
+            <span id='real-price-box'>
+                <CustomeLabel>Size<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeSelector onChange={(data)=>this.setState({
+                    productSize: data,
+                })} options={this.state.productSizeList}/>
+            </span>
+            <br />
+            <br />
         </section>;
 
     }
 
 
+    productOrganization = () => {
+        return <section className='product-section-style'>
+            <br />
+            <div style={{ display: 'flex' }}>
+                <div id='title'>
+                    4
+                </div>
+                <label>
+                    BrnadName
+                </label>
+            </div>
+            <br />
+            <span id='title-box'>
+                <CustomeLabel>Brand<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeInputBox onChange={this.onBrandNameChange} type="text" placeholder="brandName"></CustomeInputBox>
+            </span>
+            <br />
+            <br />
+            <span id='sub-title-box'>
+                <CustomeLabel>Seller<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeInputBox onChange={this.onSellerChange} type="text" placeholder="seller"></CustomeInputBox>
+            </span>
+            <br />
+            <br />
+            <span id='description-box'>
+                <CustomeLabel>Manufacturer<span style={{ color: 'red' }}>*</span></CustomeLabel>
+                <CustomeTextareaBox onInvalid={this.validateManufacturer} required={true}onChange={this.onManufacturerChange} type="text" height="100px" placeholder="manufaturer details"></CustomeTextareaBox>
+            </span>
+            <br /><br />
+        </section>
+    }
 
+
+    onArticalNoChange = (val) => this.setState({articalNo: val.target.value}); 
     onTitleChange = (val) => this.setState({title: val.target.value});
     onSubTitleChange = (val) => this.setState({subTitle: val.target.value});
     onDescriptionChange = (val) => this.setState({description: val.target.value});
     onMoreInfoChange = (val) => this.setState({moreInfo: val.target.value});
     onRealPriceChange = (val) => this.setState({realPrice: val.target.value});
     onDiscountedPriceChange = (val) => this.setState({discountedPrice: val.target.value});
+    onBrandNameChange = (val) => this.setState({brandName: val.target.value});
+    onSellerChange = (val) => this.setState({seller: val.target.value});
+    onManufacturerChange = (val) => this.setState({manufacturer: val.target.value});
 
-    onFileChange = (val) => {
-        var data = [];
-        console.log(val.target.files);
-        for(var v = 0;v< val.target.files.length;v++)
-            data.push(val.target.files[v]);
-        this.setState({
-            productImages: data
+
+    createProduct = () =>{
+        ProductTransaction.createProduct(this.state).then((data) => {alert("created"); console.log(data.json())}).catch((err) => {alert(""+err)});
+    }
+    
+    uploadImages(){
+        this.state.productImages.forEach((file,index) => { 
+            const uploadTask = ProductImages.uploadImages(file,this.state.articalNo,index);
+            ProductImages.handleUploadTask(uploadTask,(progress) => {
+                var prog = this.state.uploadProgress;
+                prog.set(index,progress);
+                this.setState({
+                    uploadProgress: prog
+                });
+            },this.state);
+            
         });
     }
-
-
-
-
-    createProduct = () => {
-
-        const formData = new FormData();
     
-        // let data = {
-        //     "productDetails": {
-        //         "title": "Bules eye",
-        //         "subTitle": "subTitle",
-        //         "description": "description",
-        //         "moreInfo": "moreInfo"
-        //     },
-        //     "productPricing": {
-        //         "realPrice": 300.0,
-        //         "discountPrice": 125.0
-        //     },
-        //     "productVariant": {
-        //         "gender": "MALE",
-        //         "size": "FREE",
-        //         "color": "MULTICOLOR",
-        //         "mainCategory": {
-        //             "id":  "78aeb94e-9260-4cae-afdc-e617ee532f67"
-        //         },
-        //         "subCategory": {
-        //             "id": "711b7591-8f70-4b67-b127-aa80e615cc29"
-        //         },
-        //         "netQuantity": 3
-        //     },
-        //     "productInventory": {
-        //         "inStock": 105
-        //     },
-        //     "productOrganization": {
-        //         "brandName": "OWN",
-        //         "seller": "OWN",
-        //         "manufacturer": "OWn"
-        //     },
-        //     "activation": true
-        // };
+    checkValidity(){
+        
+        
+        this.uploadImages();
+        if(this.state.title.toString().trim().length === 0 || 
+        this.state.subTitle.toString().trim.length === 0 ||
+        this.state.description.toString().trim.length === 0 ||
+        this.state.moreInfo.toString().trim.length === 0 ||
+        this.state.subCategory.toString().trim.length === 0 ||
+        this.state.mainCategory.toString().trim.length === 0 ||
+        this.state.realPrice.toString().trim.length === 0 ||
+        this.state.discountedPrice.toString().trim.length === 0 ||
+        this.state.brandName.toString().trim.length === 0 ||
+        this.state.manufacturer.toString().trim.length === 0 ||
+        this.state.seller.toString().trim.length === 0 ||
+        this.state.productSize.toString().trim.length === 0)
+        {
+            alert("Please complete all fields");
+        }
+        else{
+            this.createProduct();
+        }
+    }   
 
-        this.state.productImages.forEach((e) => formData.append("file",e));
-        axios.post("http://localhost:8083/product_service/admin/create/product/images/upload",formData, {
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNzEyNjksImlhdCI6MTY5MzMzNTI2OX0.8brHJCHDeQznXRIWg5g7M1rycoSpZDltM36yCZcFoQM"
-            },
-        }).then((e) => console.log(e));
-
-
-        // fetch("http://localhost:8081/product_service/admin/create/product/images/upload",{
-        //     method: "POST",
-        //     body: formData,
-        //     headers: {
-                
-        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNjc5MDcsImlhdCI6MTY5MzMzMTkwN30.JczCzqUpmJqbpbx-4i72j0_vqcXVdK99nnqa8ChX59U"
-        //     }
-        // });
-
-        // axios.post({
-        //     method: "post",
-        //     url: "http://localhost:8081/product_service/admin/create/product/images/upload",
-        //     data: formData,
-        //     headers: { 
-        //         "Content-Type": "multipart/form-data",
-        //         // "Access-Control-Allow-Origin": "*"
-        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNjc5MDcsImlhdCI6MTY5MzMzMTkwN30.JczCzqUpmJqbpbx-4i72j0_vqcXVdK99nnqa8ChX59U"
-        //     },
-        // });
-    }
+    
 }

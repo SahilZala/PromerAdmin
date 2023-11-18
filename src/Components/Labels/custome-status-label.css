@@ -1,0 +1,8 @@
+.custome-status-label{
+    display: flex;
+    width: 70%;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: 500;
+    justify-content: center;
+}

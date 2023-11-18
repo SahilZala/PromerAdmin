@@ -1,0 +1,52 @@
+onFileChange = (val) => {
+        var data = [];
+        console.log(val.target.files);
+        for(var v = 0;v< val.target.files.length;v++)
+            data.push(val.target.files[v]);
+        this.setState({
+            productImages: data
+        });
+    }
+    
+createProduct = () => {
+
+        // const formData = new FormData();
+        // let productDto = new ProductDto(
+        //     "bulesEye","dubTitle","description","any",100,80,"MALE",{
+        //         "id": "0"
+        //     },"MULTICOLOR", {
+        //         "id":  "d26138a7-5958-4fdc-bec3-929c7dfa9fc3"
+        //     }, {
+        //         "id": "685b5b97-ceb3-4a5d-9913-6a1cd333743c"
+        //     },"brandname","seller","anyu",true
+        // );
+
+        // this.state.productImages.forEach((e) => formData.append("file",e));
+        // axios.post("http://localhost:8083/product_service/admin/create/product/images/upload",formData, {
+        //     headers: { 
+        //         "Content-Type": "multipart/form-data",
+        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNzEyNjksImlhdCI6MTY5MzMzNTI2OX0.8brHJCHDeQznXRIWg5g7M1rycoSpZDltM36yCZcFoQM"
+        //     },
+        // }).then((e) => console.log(e));
+
+
+        // fetch("http://localhost:8081/product_service/admin/create/product/images/upload",{
+        //     method: "POST",
+        //     body: formData,
+        //     headers: {
+                
+        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNjc5MDcsImlhdCI6MTY5MzMzMTkwN30.JczCzqUpmJqbpbx-4i72j0_vqcXVdK99nnqa8ChX59U"
+        //     }
+        // });
+
+        // axios.post({
+        //     method: "post",
+        //     url: "http://localhost:8081/product_service/admin/create/product/images/upload",
+        //     data: formData,
+        //     headers: { 
+        //         "Content-Type": "multipart/form-data",
+        //         // "Access-Control-Allow-Origin": "*"
+        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEyM0BnbWFpbC5jb20iLCJleHAiOjE2OTMzNjc5MDcsImlhdCI6MTY5MzMzMTkwN30.JczCzqUpmJqbpbx-4i72j0_vqcXVdK99nnqa8ChX59U"
+        //     },
+        // });
+    }

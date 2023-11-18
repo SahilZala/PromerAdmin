@@ -5,6 +5,7 @@ import "./dashbord-view-style.css";
 import { AppsOutlined, ShoppingBagOutlined, Person2Outlined, CategoryOutlined } from "@mui/icons-material";
 import CreateProduct from "../Product/Create/create-product";
 import CreateMainCategory from "../../Components/Category/MainCategory/create-main-category";
+import ShowProducts from "../Product/Show/show-products";
 export default class Dashbord extends React.Component {
     constructor() {
         super();
@@ -12,11 +13,11 @@ export default class Dashbord extends React.Component {
         this.myViews = {
             0: <>Overview</>,
             1: <>Products</>,
-            2: <>Users</>,
+            2: <>Users</>,  
             3: <>Categorys</>,
             10: <CreateProduct></CreateProduct>,
-            11: <>show product</>,
-            12: <CreateMainCategory/>
+            11: <ShowProducts/>,
+            31: <CreateMainCategory/>
         }
         this.state = {
             width: "0px",
@@ -41,10 +42,6 @@ export default class Dashbord extends React.Component {
                     {
                         id: 11,
                         item: "Show Product"
-                    },
-                    {
-                        id: 12,
-                        item: "Create main category"
                     }
                 ]
             },
@@ -58,7 +55,12 @@ export default class Dashbord extends React.Component {
                 id: 3,
                 item: 'Categorys',
                 icon: <CategoryOutlined />,
-                subItems: []
+                subItems: [
+                    {
+                        id: 31,
+                        item: "Create main category"
+                    }
+                ]
             }
             ],
             sidebarSelectedItemIndex: 0,
@@ -67,8 +69,7 @@ export default class Dashbord extends React.Component {
     }
     render() {
         return (
-            <>
-                <div style={{
+                <section style={{
                     display: 'flex',
                     flexDirection: 'column',
                     width: '100%',
@@ -79,18 +80,18 @@ export default class Dashbord extends React.Component {
                         <CustomeNavbar onClick={() => this.state.isOpen ? this.closeDrawer() : this.openDrawer()} />
                     </section>
                 </header>
-                <body style={{flex: '1'}}>
-                    <section className="main">
-                        <section className="side-bar">
-                            <CustomeSideBar onSubItemClick={(id) => this.onSubItemClick(id)} openItem={(index) => this.setState({ sidebarSelectedItemIndex: index,selectedSubView: this.state.sidebarItemData[index].id })} sidebarSelectedItemIndex={this.state.sidebarSelectedItemIndex} itemData={this.state.sidebarItemData} width={this.state.width} />
+                    <div style={{flex: '1'}}>
+                        <section className="main">
+                            <section className="side-bar">
+                                <CustomeSideBar onSubItemClick={(id) => this.onSubItemClick(id)} openItem={(index) => this.setState({ sidebarSelectedItemIndex: index,selectedSubView: this.state.sidebarItemData[index].id })} sidebarSelectedItemIndex={this.state.sidebarSelectedItemIndex} itemData={this.state.sidebarItemData} width={this.state.width} />
+                            </section>
+                            <section  className="main-space">
+                                {this.myViews[this.state.selectedSubView]}
+                            </section>
                         </section>
-                        <section  className="main-space">
-                            {this.myViews[this.state.selectedSubView]}
-                        </section>
-                    </section>
-                </body>
-                </div>
-            </>
+                    </div>
+                </section>
+            
         );
     }
 

@@ -1,12 +1,5 @@
-import React from "react";
-import './create-main-category.css';
-import CustomeClearButton from "../../Buttons/custome-clear-button";
-import CustomeSubmitButton from "../../Buttons/cutome-submit-button";
-import CustomeLabel from "../../Labels/custome-label";
-import CustomeInputBox from "../../InputBox/custome-input-box";
-
-export default class CreateMainCategory extends React.Component
-{
+import './main-category.css';
+class MainCategory extends React.Component{
     constructor(props){
         super(props);
 
@@ -14,9 +7,10 @@ export default class CreateMainCategory extends React.Component
             mainCategory: ''
         }
     }
+
     render(){
         return (
-            <section className='create-main-category-body'>
+            <section className='main-category-body'>
                 <br />
                 <form onReset={()=>{this.setState({mainCategory: ''})}} onSubmit={this.handleSubmit} className='create-main-category-form'>
                     <header>
