@@ -11,17 +11,17 @@ import CustomeSelector from '../../../Components/Selector/custome-selection';
 import { ProductTransaction } from '../../../Transaction/product_transaction';
 import ProductImages from '../../../Transaction/product_images';
 export default class CreateProduct extends React.Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
 
-        
+
         this.mainCategory = []
 
         this.subCategory = []
 
         this.state = {
-            articalNo: 0,
+            articalNo: "",
             title: '',
             subTitle: '',
             description: '',
@@ -38,52 +38,53 @@ export default class CreateProduct extends React.Component {
             mainCategory: {},
             subCategory: {},
             productSize: {},
-            
+
             genderList: [
                 {
                     id: "0",
                     title: "MALE"
                 },
                 {
-                    id : "1",
+                    id: "1",
                     title: "FEMALE"
                 }
             ],
             mainCategoryList: [],
             subCategoryList: [],
-            productSizeList:[],
+            productSizeList: [],
             brandName: "",
             seller: "",
             manufacturer: ""
 
         }
 
-       
+
+
 
     }
-    componentDidMount(){
+    componentDidMount() {
         ProductTransaction.getMainCategory()
-        .then((data) => data.json().then((value) => this.setState({
-            mainCategory: value[0],
-            mainCategoryList: value, 
-            subCategoryList: value[0].subCategory,
-            subCategory: value[0].subCategory[0]
-        })))
-        .catch((error) => console.log(" errr "+error));
+            .then((data) => data.json().then((value) => this.setState({
+                mainCategory: value[0],
+                mainCategoryList: value,
+                subCategoryList: value[0].subCategory,
+                subCategory: value[0].subCategory[0]
+            })))
+            .catch((error) => console.log(" errr " + error));
 
         ProductTransaction.getSizeCategory()
-        .then((data) => data.json().then((value) => this.setState(
-            {
-                productSizeList: value,
-                productSize: value[0]
-        })))
-        .catch((error) => console.log(" errr "+error));
+            .then((data) => data.json().then((value) => this.setState(
+                {
+                    productSizeList: value,
+                    productSize: value[0]
+                })))
+            .catch((error) => console.log(" errr " + error));
     }
     render() {
         return (
             <section className='create-product-body'>
                 <br />
-                <form onReset={()=>{this.setState({productImages: []})}} onSubmit={this.handleSubmit} className='create-product-form'>
+                <form onReset={() => { this.setState({ productImages: [] }) }} onSubmit={this.handleSubmit} className='create-product-form'>
                     <header>
                         <div className='phase1'>
                             <p className='create-product-title'>New Product</p>
@@ -95,7 +96,7 @@ export default class CreateProduct extends React.Component {
                     </header>
 
 
-                    <section style={{display: 'flex'}}>
+                    <section style={{ display: 'flex' }}>
                         <section id='phase1'>
                             {this.productDetails()}
                             {this.productPricing()}
@@ -104,8 +105,8 @@ export default class CreateProduct extends React.Component {
                             {this.pickImages()}
                             {this.productVariant()}
                             {this.productOrganization()}
-                            
-                           
+
+
                         </section>
                     </section>
 
@@ -179,20 +180,19 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='discounted-price-box'>
                 <CustomeLabel>Discounted Price<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox  onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
+                <CustomeInputBox onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
             </span>
-            
+
         </section>
     }
 
     onFileChange = (val) => {
         var data = [];
-        console.log(val.target.files);
 
         var prog = new Map();
-        for(var v = 0;v< val.target.files.length;v++){
+        for (var v = 0; v < val.target.files.length; v++) {
             data.push(val.target.files[v]);
-            prog.set(v,0);
+            prog.set(v, 0);
         }
 
         console.log(prog);
@@ -205,7 +205,7 @@ export default class CreateProduct extends React.Component {
 
     pickImages = () => {
         return <section className='product-section-style'>
-             <br />
+            <br />
             <div style={{ display: 'flex' }}>
                 <div id='title'>
                     5
@@ -217,12 +217,12 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Select Product Images<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange = {(val) => this.onFileChange(val)} type="file" placeholder="photos"></CustomeInputBox>
+                <CustomeInputBox onChange={(val) => this.onFileChange(val)} type="file" placeholder="photos"></CustomeInputBox>
             </span>
             <br />
             <br />
-            { this.state.productImages.map((val) => {
-               return <img alt='' src={URL.createObjectURL(val)}/>
+            {this.state.productImages.map((val) => {
+                return <img alt='' src={URL.createObjectURL(val)} />
             })}
         </section>;
 
@@ -231,7 +231,7 @@ export default class CreateProduct extends React.Component {
 
     productVariant = () => {
         return <section className='product-section-style'>
-             <br />
+            <br />
             <div style={{ display: 'flex' }}>
                 <div id='title'>
                     3
@@ -243,38 +243,37 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Select gender<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data)=>{
-                    console.log(data);
+                <CustomeSelector onChange={(data) => {
                     this.setState({
                         gender: data
                     });
-                }} options={this.state.genderList}/>
+                }} options={this.state.genderList} />
             </span>
             <br />
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Main category<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data)=>this.setState({
+                <CustomeSelector onChange={(data) => this.setState({
                     mainCategory: data,
                     subCategoryList: data.subCategory,
                     subCategory: data.subCategory[0]
-                })} options={this.state.mainCategoryList}/>
+                })} options={this.state.mainCategoryList} />
             </span>
             <br />
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Sub category<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data)=>this.setState({
+                <CustomeSelector onChange={(data) => this.setState({
                     subCategory: data,
-                })} options={this.state.subCategoryList}/>
+                })} options={this.state.subCategoryList} />
             </span>
             <br />
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Size<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data)=>this.setState({
+                <CustomeSelector onChange={(data) => this.setState({
                     productSize: data,
-                })} options={this.state.productSizeList}/>
+                })} options={this.state.productSizeList} />
             </span>
             <br />
             <br />
@@ -309,66 +308,73 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='description-box'>
                 <CustomeLabel>Manufacturer<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeTextareaBox onInvalid={this.validateManufacturer} required={true}onChange={this.onManufacturerChange} type="text" height="100px" placeholder="manufaturer details"></CustomeTextareaBox>
+                <CustomeTextareaBox onInvalid={this.validateManufacturer} required={true} onChange={this.onManufacturerChange} type="text" height="100px" placeholder="manufaturer details"></CustomeTextareaBox>
             </span>
             <br /><br />
         </section>
     }
 
 
-    onArticalNoChange = (val) => this.setState({articalNo: val.target.value}); 
-    onTitleChange = (val) => this.setState({title: val.target.value});
-    onSubTitleChange = (val) => this.setState({subTitle: val.target.value});
-    onDescriptionChange = (val) => this.setState({description: val.target.value});
-    onMoreInfoChange = (val) => this.setState({moreInfo: val.target.value});
-    onRealPriceChange = (val) => this.setState({realPrice: val.target.value});
-    onDiscountedPriceChange = (val) => this.setState({discountedPrice: val.target.value});
-    onBrandNameChange = (val) => this.setState({brandName: val.target.value});
-    onSellerChange = (val) => this.setState({seller: val.target.value});
-    onManufacturerChange = (val) => this.setState({manufacturer: val.target.value});
+    onArticalNoChange = (val) => this.setState({ articalNo: val.target.value });
+    onTitleChange = (val) => this.setState({ title: val.target.value });
+    onSubTitleChange = (val) => this.setState({ subTitle: val.target.value });
+    onDescriptionChange = (val) => this.setState({ description: val.target.value });
+    onMoreInfoChange = (val) => this.setState({ moreInfo: val.target.value });
+    onRealPriceChange = (val) => this.setState({ realPrice: val.target.value });
+    onDiscountedPriceChange = (val) => this.setState({ discountedPrice: val.target.value });
+    onBrandNameChange = (val) => this.setState({ brandName: val.target.value });
+    onSellerChange = (val) => this.setState({ seller: val.target.value });
+    onManufacturerChange = (val) => this.setState({ manufacturer: val.target.value });
 
 
-    createProduct = () =>{
-        ProductTransaction.createProduct(this.state).then((data) => {alert("created"); console.log(data.json())}).catch((err) => {alert(""+err)});
+    createProduct = () => {
+        ProductTransaction
+            .createProduct(this.state)
+            .then((data) => {
+                
+                data.json().then((data) => {
+                    alert("product created wait for image upload");                
+                    this.uploadImages(data.id);
+                })
+                
+        }).catch((err) => { alert("" + err) });
     }
-    
-    uploadImages(){
-        this.state.productImages.forEach((file,index) => { 
-            const uploadTask = ProductImages.uploadImages(file,this.state.articalNo,index);
-            ProductImages.handleUploadTask(uploadTask,(progress) => {
-                var prog = this.state.uploadProgress;
-                prog.set(index,progress);
-                this.setState({
-                    uploadProgress: prog
-                });
-            },this.state);
-            
-        });
+
+    uploadImages(id) {
+        ProductImages.uploadImagesRecu(this.state.productImages,id,0,(val) => {
+            var list = this.state.productImageUrls;
+            list.push(val);
+
+            this.setState({
+                productImageUrls: list
+            });
+        }, []);
     }
-    
-    checkValidity(){
-        
-        
-        this.uploadImages();
-        if(this.state.title.toString().trim().length === 0 || 
-        this.state.subTitle.toString().trim.length === 0 ||
-        this.state.description.toString().trim.length === 0 ||
-        this.state.moreInfo.toString().trim.length === 0 ||
-        this.state.subCategory.toString().trim.length === 0 ||
-        this.state.mainCategory.toString().trim.length === 0 ||
-        this.state.realPrice.toString().trim.length === 0 ||
-        this.state.discountedPrice.toString().trim.length === 0 ||
-        this.state.brandName.toString().trim.length === 0 ||
-        this.state.manufacturer.toString().trim.length === 0 ||
-        this.state.seller.toString().trim.length === 0 ||
-        this.state.productSize.toString().trim.length === 0)
-        {
+
+
+
+
+    checkValidity() {
+        if (
+            this.state.articalNo.toString().trim().length === 0 ||
+            this.state.title.toString().trim().length === 0 ||
+            this.state.subTitle.toString().trim().length === 0 ||
+            this.state.description.toString().trim().length === 0 ||
+            this.state.moreInfo.toString().trim().length === 0 ||
+            this.state.subCategory.toString().trim().length === 0 ||
+            this.state.mainCategory.toString().trim().length === 0 ||
+            this.state.realPrice.toString().trim().length === 0 ||
+            this.state.discountedPrice.toString().trim().length === 0 ||
+            this.state.brandName.toString().trim().length === 0 ||
+            this.state.manufacturer.toString().trim().length === 0 ||
+            this.state.seller.toString().trim().length === 0 ||
+            this.state.productSize.toString().trim().length === 0) {
             alert("Please complete all fields");
         }
-        else{
+        else {
             this.createProduct();
         }
-    }   
+    }
 
-    
+
 }

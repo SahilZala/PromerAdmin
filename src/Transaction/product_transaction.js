@@ -10,10 +10,6 @@ export class ProductTransaction {
     }
 
     static createProduct(data){
-
-
-        console.log(data);
-
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -46,9 +42,17 @@ export class ProductTransaction {
 
         return fetch(ApiUrls.CRATE_PRODUCT,requestOptions);
     }
-
-
     static getAllProducts(){
         return fetch(ApiUrls.GET_ALL_PRODUCTS);
+    }
+
+    static createImageUrl(obj)
+    {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(obj)
+        }
+        return fetch(ApiUrls.CREATE_IMAGE,requestOptions);
     }
 }

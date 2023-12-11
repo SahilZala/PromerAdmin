@@ -1,0 +1,49 @@
+.create-sub-category-body .phase1{
+    display: flex;
+}
+
+.create-sub-category-body .create-sub-category-form .create-sub-category-title{
+    margin: 15px;
+    font-family: var(--main-font);
+    color: var(--main-color-black);
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.create-sub-category-body .create-sub-category-form .create-sub-category-title{
+    margin: 15px;
+    font-family: var(--main-font);
+    color: var(--main-color-black);
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.create-sub-category-body .create-sub-category-form  .phase2{
+    display: flex;
+    flex: 1;
+}
+
+.create-sub-category-body .create-sub-category-form .sub-category-section-style{
+    margin: 15px;
+}
+
+.create-sub-category-body .create-sub-category-form .sub-category-section-style  #title{
+    margin-right: 5px;
+    color: white;
+    background-color: var(--main-color-black);
+    shape-outside: circle();
+    clip-path: circle();
+    padding: 10px;
+    font-size: 15px;
+    font-family: var(--main-font);
+}
+
+
+.create-sub-category-body .create-sub-category-form .sub-category-section-style label{
+    margin-left: 5px;
+    font-family: var(--main-font);
+    display: flex;
+    font-size: 20px;
+    text-align: center;
+    align-items: center; 
+}

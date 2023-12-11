@@ -4,8 +4,11 @@ import CustomeSideBar from "../../Components/Sidebar/custome-sidebar";
 import "./dashbord-view-style.css";
 import { AppsOutlined, ShoppingBagOutlined, Person2Outlined, CategoryOutlined } from "@mui/icons-material";
 import CreateProduct from "../Product/Create/create-product";
-import CreateMainCategory from "../../Components/Category/MainCategory/create-main-category";
 import ShowProducts from "../Product/Show/show-products";
+import ShowMainCategory from "../Category/MainCategory/show-main-category";
+import SubCategory from "../Category/SubCategory/sub-category";
+import MainCategory from "../Category/MainCategory/main-category";
+import ShowSubCategory from "../Category/SubCategory/show-subcategory";
 export default class Dashbord extends React.Component {
     constructor() {
         super();
@@ -13,11 +16,14 @@ export default class Dashbord extends React.Component {
         this.myViews = {
             0: <>Overview</>,
             1: <>Products</>,
-            2: <>Users</>,  
+            2: <>Users</>,
             3: <>Categorys</>,
             10: <CreateProduct></CreateProduct>,
-            11: <ShowProducts/>,
-            31: <CreateMainCategory/>
+            11: <ShowProducts />,
+            31: <MainCategory />,
+            32: <ShowMainCategory />,
+            33: <SubCategory />,
+            34: <ShowSubCategory/>
         }
         this.state = {
             width: "0px",
@@ -59,6 +65,18 @@ export default class Dashbord extends React.Component {
                     {
                         id: 31,
                         item: "Create main category"
+                    },
+                    {
+                        id: 32,
+                        item: "Show main category"
+                    },
+                    {
+                        id: 33,
+                        item: "Create sub category"
+                    },
+                    {
+                        id: 34,
+                        item: "Show sub category"
                     }
                 ]
             }
@@ -69,47 +87,40 @@ export default class Dashbord extends React.Component {
     }
     render() {
         return (
-                <section style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    height: '100vh'
-                }}>
+            <section style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                height: '100vh'
+            }}>
                 <header>
                     <section id="navbar">
                         <CustomeNavbar onClick={() => this.state.isOpen ? this.closeDrawer() : this.openDrawer()} />
                     </section>
                 </header>
-                    <div style={{flex: '1'}}>
-                        <section className="main">
-                            <section className="side-bar">
-                                <CustomeSideBar onSubItemClick={(id) => this.onSubItemClick(id)} openItem={(index) => this.setState({ sidebarSelectedItemIndex: index,selectedSubView: this.state.sidebarItemData[index].id })} sidebarSelectedItemIndex={this.state.sidebarSelectedItemIndex} itemData={this.state.sidebarItemData} width={this.state.width} />
-                            </section>
-                            <section  className="main-space">
-                                {this.myViews[this.state.selectedSubView]}
-                            </section>
+                <div style={{ flex: '1' }}>
+                    <section className="main">
+                        <section className="side-bar">
+                            <CustomeSideBar onSubItemClick={(id) => this.onSubItemClick(id)} openItem={(index) => this.setState({ sidebarSelectedItemIndex: index, selectedSubView: this.state.sidebarItemData[index].id })} sidebarSelectedItemIndex={this.state.sidebarSelectedItemIndex} itemData={this.state.sidebarItemData} width={this.state.width} />
                         </section>
-                    </div>
-                </section>
-            
+                        <section className="main-space">
+                            {this.myViews[this.state.selectedSubView]}
+                        </section>
+                    </section>
+                </div>
+            </section>
         );
     }
 
 
     openDrawer = () => {
-        console.log("open drawer");
-
         this.setState({
             width: "250px",
             isOpen: true
         });
-
-
     }
 
     closeDrawer = () => {
-        console.log("close drawer");
-
         this.setState({
             width: "0px",
             isOpen: false

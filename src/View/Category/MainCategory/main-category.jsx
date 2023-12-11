@@ -1,5 +1,13 @@
+import React from "react";
 import './main-category.css';
-class MainCategory extends React.Component{
+import CustomeClearButton from "../../../Components/Buttons/custome-clear-button";
+import CustomeSubmitButton from "../../../Components/Buttons/cutome-submit-button";
+import CustomeLabel from "../../../Components/Labels/custome-label";
+import CustomeInputBox from "../../../Components/InputBox/custome-input-box";
+import CategoryTransaction from "../../../Transaction/category_transaction";
+
+export default class MainCategory extends React.Component
+{
     constructor(props){
         super(props);
 
@@ -7,10 +15,9 @@ class MainCategory extends React.Component{
             mainCategory: ''
         }
     }
-
     render(){
         return (
-            <section className='main-category-body'>
+            <section className='create-main-category-body'>
                 <br />
                 <form onReset={()=>{this.setState({mainCategory: ''})}} onSubmit={this.handleSubmit} className='create-main-category-form'>
                     <header>
@@ -25,7 +32,7 @@ class MainCategory extends React.Component{
 
 
                     <>
-                        <section id='phase1'>
+                        <section>
                             {this.mainCategoryDetails()}
                         </section>
                     </>
@@ -34,7 +41,7 @@ class MainCategory extends React.Component{
         );
     }
 
-    handleSubmit = (event) => { console.log(event); console.log(this.state); event.preventDefault(); this.createMainCategory();}
+    handleSubmit = (event) => { event.preventDefault(); this.createMainCategory();}
 
     mainCategoryDetails = () => {
         return <section className='main-category-section-style'>
@@ -59,6 +66,12 @@ class MainCategory extends React.Component{
     onMainCategoryChange = (val) => this.setState({mainCategory: val.target.value});
 
     createMainCategory = () => {
-        console.log(this.state.mainCategory);
+        let data = {
+            title: this.state.mainCategory
+        };
+        CategoryTransaction.createMainCategory(data).then((data) => data.json().then((val) => {
+            console.log(val);
+            alert("main category created");
+        })).catch((ex) => alert(ex));
     }
 }
