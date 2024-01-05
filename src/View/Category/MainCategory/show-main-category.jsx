@@ -2,13 +2,15 @@ import React from "react";
 import './show-main-catrgory.css';
 import CategoryTransaction from "../../../Transaction/category_transaction";
 import { Create } from "@mui/icons-material";
+import CircularProgress from '@mui/material/CircularProgress';
 export default class ShowMainCategory extends React.Component {
 
     constructor(){
         super();
 
         this.state = {
-            data: []
+            data: [],
+            progress: false
         }
     }
 
@@ -40,6 +42,7 @@ export default class ShowMainCategory extends React.Component {
                                 }}>Action</th>
                             </tr>
                         </thead>
+                        {this.state.progress === true ? <CircularProgress/> : <></>}
                         <tbody>
                         {
                             this.state.data.map((data,index) => <tr key={index}>
@@ -68,12 +71,24 @@ export default class ShowMainCategory extends React.Component {
     }
 
     getMainCategory(){
+        this.setState({
+            progress: true
+        })
         CategoryTransaction.getAllMainCategory().then((data) => data.json().then((val) => {
             this.setState({
-                data: val
+                data: val,
+                progress: false
             });
-        }).catch((error) => console.log("json error "+error))).catch((error) => {
+        }).catch((error) => {
+            console.log("json error "+error)
+            this.setState({
+                progress: false
+            })
+    })).catch((error) => {
             alert(error);
+            this.setState({
+                progress: false
+            })
         });
     }
 

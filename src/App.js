@@ -11,7 +11,7 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Routes>
-            <Route path="/dashbord" index element={<Dashbord />} />
+            <Route path="/" index element={<Dashbord />} />
         </Routes>
       </BrowserRouter>
     );

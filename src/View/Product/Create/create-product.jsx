@@ -10,12 +10,11 @@ import CustomeSelector from '../../../Components/Selector/custome-selection';
 // import ProductDto from '../../../Dto/product_dto';
 import { ProductTransaction } from '../../../Transaction/product_transaction';
 import ProductImages from '../../../Transaction/product_images';
+import ProgressIndicator from '../../../Components/ProgressIndicator/progress_indicator';
 export default class CreateProduct extends React.Component {
 
     constructor(props) {
         super(props);
-
-
         this.mainCategory = []
 
         this.subCategory = []
@@ -54,7 +53,9 @@ export default class CreateProduct extends React.Component {
             productSizeList: [],
             brandName: "",
             seller: "",
-            manufacturer: ""
+            manufacturer: "",
+
+            progress: false,
 
         }
 
@@ -82,7 +83,9 @@ export default class CreateProduct extends React.Component {
     }
     render() {
         return (
-            <section className='create-product-body'>
+            <>
+            {this.state.progress === true ? <ProgressIndicator title="PRODUCT CREATION IS IN PROGRESS PLEASE DONT PRESSE BACK OR CHANGE TABLE...."/> : <section className='create-product-body'>
+                
                 <br />
                 <form onReset={() => { this.setState({ productImages: [] }) }} onSubmit={this.handleSubmit} className='create-product-form'>
                     <header>
@@ -111,7 +114,10 @@ export default class CreateProduct extends React.Component {
                     </section>
 
                 </form>
-            </section>
+
+            </section>}
+            
+            </>
         );
     }
 
@@ -315,7 +321,7 @@ export default class CreateProduct extends React.Component {
     }
 
 
-    onArticalNoChange = (val) => this.setState({ articalNo: val.target.value });
+    onArticalNoChange = (val) => this.setState({ articalNo: val.target.value.toString() });
     onTitleChange = (val) => this.setState({ title: val.target.value });
     onSubTitleChange = (val) => this.setState({ subTitle: val.target.value });
     onDescriptionChange = (val) => this.setState({ description: val.target.value });
@@ -328,27 +334,47 @@ export default class CreateProduct extends React.Component {
 
 
     createProduct = () => {
+        this.setState({
+            progress: true
+        });
         ProductTransaction
             .createProduct(this.state)
             .then((data) => {
-                
+            if(data.status === 500){
+                alert("Internal Server Error");
+                this.setState({
+                    progress: false
+                });
+            }
+            else
                 data.json().then((data) => {
-                    alert("product created wait for image upload");                
+                    
+                    alert("product created wait for image upload ");                
                     this.uploadImages(data.id);
                 })
-                
-        }).catch((err) => { alert("" + err) });
+        }).catch((err) => { alert("" + err); this.setState({
+            progress: false
+        });});
     }
 
     uploadImages(id) {
         ProductImages.uploadImagesRecu(this.state.productImages,id,0,(val) => {
             var list = this.state.productImageUrls;
             list.push(val);
+           
 
             this.setState({
                 productImageUrls: list
             });
-        }, []);
+        }, [],() => {
+            this.setState({
+                progress: false
+            });
+        },()=>{
+            this.setState({
+                progress: false
+            });
+        });
     }
 
 

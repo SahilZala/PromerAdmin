@@ -15,6 +15,7 @@ export class ProductTransaction {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 "productDetails": {
+                    "articleNumber": data.articalNo,
                     "title": data.title,
                     "subTitle": data.subTitle,
                     "description": data.description,
@@ -54,5 +55,14 @@ export class ProductTransaction {
             body: JSON.stringify(obj)
         }
         return fetch(ApiUrls.CREATE_IMAGE,requestOptions);
+    }
+
+    static deleteProduct(obj){
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(obj)
+        }
+        return fetch(ApiUrls.DELETE_PRODUCT,requestOptions);
     }
 }

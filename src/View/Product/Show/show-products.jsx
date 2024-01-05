@@ -3,13 +3,19 @@ import './show-products.css';
 import { Create } from "@mui/icons-material";
 import CustomeStatusLabel from "../../../Components/Labels/custome-status-label";
 import { ProductTransaction } from "../../../Transaction/product_transaction";
+import CircularProgress from '@mui/material/CircularProgress';
+import UpdateDeleteDailog from "../../../Components/Dailog/update-delete-dailog";
+import ProductImages from "../../../Transaction/product_images";
 
 export default class ShowProducts extends React.Component{
 
     constructor(){
         super();
         this.state = {
-            data : []
+            data : [],
+            progress: true,
+            updateDeletDailog: false,
+            details: null,
         }
     }
     
@@ -20,7 +26,7 @@ export default class ShowProducts extends React.Component{
 
 
     render() {
-        return (
+        return (<>
             <section className='show-product-body'>
                 <br />                
                 <header>
@@ -35,7 +41,7 @@ export default class ShowProducts extends React.Component{
                             <th style={{
                                 flex: 1,
                                 justifyContent: "flex-start"
-                            }}>#Id</th>
+                            }}>#Article No</th>
                             <th style={{flex: 3}}>Product title</th>
                             <th style={{flex: 2}}>Main Category</th>
                             <th style={{flex: 2}}>Sub Category</th>
@@ -47,44 +53,102 @@ export default class ShowProducts extends React.Component{
                             }}>Action</th>
                         </tr>
                         </thead>
+                        {this.state.progress === true ? <CircularProgress /> : <></>}
                         <tbody>
                         {this.state.data.map((d,index) => 
                             <tr key={index}>
                                 <td style={{
                                     flex: 1,
                                     justifyContent: "flex-start"
-                                }}>{d.id.slice(0,10)}</td>
-                                <td style={{flex: 3}}>{d.productDetails.title}</td>
-                                <td style={{flex: 2}}>{d.productVariant.mainCategory.title}</td>
-                                <td style={{flex: 2}}>{d.productVariant.subCategory.title}</td>
-                                <td style={{flex: 1}}>{d.productPricing.discountPrice}</td>
+                                }}>{d.data.productDetails.articleNumber}</td>
+                                <td style={{flex: 3}}>{d.data.productDetails.title}</td>
+                                <td style={{flex: 2}}>{d.data.productVariant.mainCategory.title}</td>
+                                <td style={{flex: 2}}>{d.data.productVariant.subCategory.title}</td>
+                                <td style={{flex: 1}}>{d.data.productPricing.discountPrice}</td>
                                 <td style={{flex: 1}}>
-                                    <CustomeStatusLabel label={d.activation === true ? "ACTIVE" : "DEACTIVE"} isActive={d.activation}/>
-                                </td>
+                                    <CustomeStatusLabel label={d.data.activation === true ? "ACTIVE" : "DEACTIVE"} isActive={d.data.activation}/>
+                                </td> 
                                 <td style={{
                                     flex: 1,
                                     justifyContent: "center"
-                                }} ><Create style={{
+                                }} >{this.state.data[index].progress === false ? <Create onClick={()=>{
+                                    this.showUpdateDeleteDailogBox(d);
+                                }} style={{
                                     color: "#0496ff",
                                     cursor: "pointer"
-                                }}/></td>
+                                }}/> : <CircularProgress/>}</td>
                             </tr>
                             )}
                             </tbody>
                         </table>
                     <br/>
                 </>
+
+                {this.state.details !== null ? <UpdateDeleteDailog deleteDailog={(val)=>this.deleteProduct(val)} updateDailog={()=>this.updateProduct()} data={this.state.details} open={this.state.updateDeletDailog} handleClose={()=>{this.setState({updateDeletDailog: false})}}/> : <></>}
             </section>
+            </>
         );
     }
 
 
-    getAllProducts = () =>  ProductTransaction.getAllProducts().then((data) => data.json().then((val) => 
+    getAllProducts = () =>  {
         this.setState({
-            data : val
+            progress: true
+        });
+    ProductTransaction.getAllProducts().then((data) => data.json().then((val) => 
+       {
+        let mainData = [];
+        val.forEach((val) => {
+            mainData.push({
+                data: val,
+                progress: false
+            });
         })
-    ).catch((err) => console.log("err"+err))
+        
+        this.setState({
+            data : mainData,
+            progress: false
+        })
+        }
+    ).catch((err) => {
+        console.log("err"+err)
+        this.setState({
+            progress: false
+        });
+    })
     ).catch((err) => {
         console.log(err);
+        this.setState({
+            progress: false
+        });
     });
+    }
+
+    showUpdateDeleteDailogBox = (data) => {
+       this.setState({
+        updateDeletDailog: true,
+        details: data
+       }); 
+    }
+
+
+    deleteProduct(val){
+        
+        
+        this.setState({updateDeletDailog: false});
+
+        ProductTransaction.deleteProduct(val.data).then(() => {
+
+            val.data.productImages.forEach((data) => ProductImages.deleteImage(val.data.id,data.title));
+        
+            this.getAllProducts();
+        
+        }).catch((err) => {
+            alert(err);
+            
+
+        });
+        
+    }
+
 }

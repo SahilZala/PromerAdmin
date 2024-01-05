@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
+import { deleteObject, getStorage } from "firebase/storage";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { ProductTransaction } from "./product_transaction";
 
@@ -25,8 +25,18 @@ export default class ProductImages {
         return getStorage(app);
     }
 
-    static uploadImages(file, id, filename, uploadTask, setState, state, index) {
+    static deleteImage(id,filename){
+        console.log(id+" "+filename);
+        let storage = this.initializeStorage();
+        let dbref = ref(storage,"Product/"+id+"/"+filename+".png");
+        deleteObject(dbref).then(() => {
+            console.log("completed");
+        }).catch((error) => {
+            console.log("error "+error);    
+        })
+    }
 
+    static uploadImages(file, id, filename, uploadTask, setState, state, index) {
         let storage = this.initializeStorage();
         const storageRef = ref(storage, 'Product/' + id + '/' + filename + ".png");
         uploadBytesResumable(storageRef, file)
@@ -39,30 +49,31 @@ export default class ProductImages {
                 (error) => {
                     alert(error);
                 }, () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((val) => {
-                        console.log(val);
-                        console.log(state.uploadProgress);
-                    });
-                });
+                getDownloadURL(uploadTask.snapshot.ref).then((val) => {
+                    console.log(val);
+                    console.log(state.uploadProgress);
+            });
+        });
     }
 
+    
 
 
-
-    static uploadImagesRecu(files, id, index, setProducImageUrl, imageUrls) {
+    static uploadImagesRecu(files, id, index, setProducImageUrl, imageUrls, onComplete,onError) {
         if (files.length === 0) {
-            alert("please select images");
+            alert("Images was not available");
+            onComplete();
             return;
         }
         if (index === files.length) {
-            alert("images uploaded");
-
+            alert("images uploaded");    
             console.log(imageUrls);
             ProductTransaction.createImageUrl(imageUrls).then((data) => {
                 alert("images url registeration done.");
-            }).catch((err) => console.log("" + err));
-
-
+                onComplete();
+            }).catch((err) => {
+                onError();
+                console.log("" + err)});
             return;
         }
 
@@ -85,10 +96,9 @@ export default class ProductImages {
                         "id": id
                     }
                 }
-                console.log(imageUrls);
                 imageUrls.push(data);
                 setProducImageUrl(data);
-                this.uploadImagesRecu(files, id, index + 1, setProducImageUrl, imageUrls);
+                this.uploadImagesRecu(files, id, index + 1, setProducImageUrl, imageUrls, onComplete,onError);
             });
         });
     }
