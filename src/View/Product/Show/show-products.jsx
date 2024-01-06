@@ -137,14 +137,23 @@ export default class ShowProducts extends React.Component{
         
         this.setState({updateDeletDailog: false});
 
-        ProductTransaction.deleteProduct(val.data).then(() => {
+        console.log(val.data);
 
-            val.data.productImages.forEach((data) => ProductImages.deleteImage(val.data.id,data.title));
-        
-            this.getAllProducts();
-        
+        ProductTransaction.deleteProduct(val.data).then((v) => {
+
+
+            if(v.status === 500)
+                alert("Internal server error");
+            else{
+                console.log(v.status);
+                console.log(val.data);
+
+                val.data.productImages.forEach((data) => ProductImages.deleteImage(val.data.id,data.title));
+            
+                this.getAllProducts();
+            }
         }).catch((err) => {
-            alert(err);
+            alert("err"+err);
             
 
         });
