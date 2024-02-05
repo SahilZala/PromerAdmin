@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { deleteObject, getStorage } from "firebase/storage";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ProductTransaction } from "./product_transaction";
+import ProductTrasaction from "./firebase/product_transaction";
 
 export default class ProductImages {
     static firebaseConfig = {
@@ -58,8 +58,8 @@ export default class ProductImages {
 
     
 
-
-    static uploadImagesRecu(files, id, index, setProducImageUrl, imageUrls, onComplete,onError) {
+    static uploadImagesFirebaseRecu(files, id, index, setProducImageUrl, imageUrls, onComplete,onError) {
+        var title = new Date().valueOf();
         if (files.length === 0) {
             alert("Images was not available");
             onComplete();
@@ -68,7 +68,7 @@ export default class ProductImages {
         if (index === files.length) {
             alert("images uploaded");    
             console.log(imageUrls);
-            ProductTransaction.createImageUrl(imageUrls).then((data) => {
+            ProductTrasaction.registerImageUrls(imageUrls).then((data) => {
                 alert("images url registeration done.");
                 onComplete();
             }).catch((err) => {
@@ -78,29 +78,78 @@ export default class ProductImages {
         }
 
         let storage = this.initializeStorage();
-        const storageRef = ref(storage, 'Product/' + id + '/' + index + ".png");
+        const storageRef = ref(storage, 'Product/' + id + '/' + title + ".png");
 
         let uploadTask = uploadBytesResumable(storageRef, files[index]);
         uploadTask.on('state_changed', (snapshot) => {
-            const progress =
-                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            console.log(index + " " + progress);
+            // const progress =
+            //     Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            
         }, (error) => {
             alert(error);
         }, () => {
             getDownloadURL(uploadTask.snapshot.ref).then((val) => {
                 let data = {
-                    "title": "" + index,
+                    "id": ""+id,
+                    "title": title,
                     "url": val,
                     "productEntity": {
-                        "id": id
+                        "id": ""+id
                     }
                 }
+
+                
                 imageUrls.push(data);
-                setProducImageUrl(data);
-                this.uploadImagesRecu(files, id, index + 1, setProducImageUrl, imageUrls, onComplete,onError);
+                console.log(imageUrls);
+                // setProducImageUrl(data);
+                this.uploadImagesFirebaseRecu(files, id, index + 1, setProducImageUrl, imageUrls, onComplete,onError);
             });
         });
     }
+
+
+    // static uploadImagesRecu(files, id, index, setProducImageUrl, imageUrls, onComplete,onError) {
+    //     if (files.length === 0) {
+    //         alert("Images was not available");
+    //         onComplete();
+    //         return;
+    //     }
+    //     if (index === files.length) {
+    //         alert("images uploaded");    
+    //         console.log(imageUrls);
+    //         ProductTransaction.createImageUrl(imageUrls).then((data) => {
+    //             alert("images url registeration done.");
+    //             onComplete();
+    //         }).catch((err) => {
+    //             onError();
+    //             console.log("" + err)});
+    //         return;
+    //     }
+
+    //     let storage = this.initializeStorage();
+    //     const storageRef = ref(storage, 'Product/' + id + '/' + index + ".png");
+
+    //     let uploadTask = uploadBytesResumable(storageRef, files[index]);
+    //     uploadTask.on('state_changed', (snapshot) => {
+    //         const progress =
+    //             Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    //         console.log(index + " " + progress);
+    //     }, (error) => {
+    //         alert(error);
+    //     }, () => {
+    //         getDownloadURL(uploadTask.snapshot.ref).then((val) => {
+    //             let data = {
+    //                 "title": "" + index,
+    //                 "url": val,
+    //                 "productEntity": {
+    //                     "id": id
+    //                 }
+    //             }
+    //             imageUrls.push(data);
+    //             setProducImageUrl(data);
+    //             this.uploadImagesRecu(files, id, index + 1, setProducImageUrl, imageUrls, onComplete,onError);
+    //         });
+    //     });
+    // }
 
 }

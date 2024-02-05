@@ -31,10 +31,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={()=>props.updateDailog()}>Update</Button>
+            <Button onClick={()=>props.updateDailog(props.data)}>Update</Button>
             <Button onClick={()=>props.deleteDailog(props.data)}>Delete</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
     );
+    
   }

@@ -1,8 +1,8 @@
 import React from "react";
 import './show-main-catrgory.css';
-import CategoryTransaction from "../../../Transaction/category_transaction";
 import { Create } from "@mui/icons-material";
 import CircularProgress from '@mui/material/CircularProgress';
+import CategoryTrasaction from "../../../Transaction/firebase/category_transaction";
 export default class ShowMainCategory extends React.Component {
 
     constructor(){
@@ -74,22 +74,12 @@ export default class ShowMainCategory extends React.Component {
         this.setState({
             progress: true
         })
-        CategoryTransaction.getAllMainCategory().then((data) => data.json().then((val) => {
+
+        CategoryTrasaction.getMainCategory().then((val) =>
             this.setState({
-                data: val,
+                data: val.docs.map((d) => d.data()),
                 progress: false
-            });
-        }).catch((error) => {
-            console.log("json error "+error)
-            this.setState({
-                progress: false
-            })
-    })).catch((error) => {
-            alert(error);
-            this.setState({
-                progress: false
-            })
-        });
+            })).catch((err) => alert(err));
     }
 
 }

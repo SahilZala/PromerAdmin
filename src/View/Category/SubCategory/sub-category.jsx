@@ -5,8 +5,9 @@ import CustomeSubmitButton from '../../../Components/Buttons/cutome-submit-butto
 import CustomeLabel from '../../../Components/Labels/custome-label';
 import CustomeInputBox from '../../../Components/InputBox/custome-input-box';
 import CustomeSelector from '../../../Components/Selector/custome-selection';
-import { ProductTransaction } from '../../../Transaction/product_transaction';
-import CategoryTransaction from '../../../Transaction/category_transaction';
+// import { ProductTransaction } from '../../../Transaction/product_transaction';
+// import CategoryTransaction from '../../../Transaction/category_transaction';
+import CategoryTrasaction from '../../../Transaction/firebase/category_transaction';
 
 export default class SubCategory extends React.Component{
 
@@ -21,13 +22,20 @@ export default class SubCategory extends React.Component{
     }
 
     componentDidMount(){
-        ProductTransaction.getMainCategory()
-        .then((data) => data.json().then((value) => this.setState({
-            mainCategory: value[0],
-            mainCategoryList: value,
+        // ProductTransaction.getMainCategory()
+        // .then((data) => data.json().then((value) => this.setState({
+        //     mainCategory: value[0],
+        //     mainCategoryList: value,
             
-        })))
-        .catch((error) => console.log(" errr " + error));
+        // })))
+        // .catch((error) => console.log(" errr " + error));
+
+
+        CategoryTrasaction.getMainCategory().then((val) =>
+        this.setState({
+            mainCategoryList: val.docs.map((d) => d.data()),
+            mainCategory: val.docs.map((d) => d.data())[0]
+        })).catch((err) => alert(err));
 
     }
 
@@ -101,16 +109,12 @@ export default class SubCategory extends React.Component{
         else{
             let data = {
                 title: this.state.subCategory,
+                id: ""+new Date().valueOf(),
                 mainCategory: {
                     id: this.state.mainCategory.id
                 }
             }
-            CategoryTransaction.createSubCategory(data).then((data) => data.json().then((val) => {
-                console.log(val);
-                alert("subcategory crated.");
-            })).catch((ex) => {
-                alert(ex);
-            });
+            CategoryTrasaction.createSubCategory(data).then(() => alert("subcategory crated.")).catch((ex) => alert(ex) );
         }
-    }
+    }   
 }

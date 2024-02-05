@@ -7,6 +7,5 @@ export default function CustomeSubmitButton(props){
             paddingRight: '5px'
         }}/>  
         {props.children}
-        
     </button>;
 }

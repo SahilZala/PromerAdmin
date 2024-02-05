@@ -4,7 +4,7 @@ import CustomeClearButton from "../../../Components/Buttons/custome-clear-button
 import CustomeSubmitButton from "../../../Components/Buttons/cutome-submit-button";
 import CustomeLabel from "../../../Components/Labels/custome-label";
 import CustomeInputBox from "../../../Components/InputBox/custome-input-box";
-import CategoryTransaction from "../../../Transaction/category_transaction";
+import CategoryTrasaction from "../../../Transaction/firebase/category_transaction";
 
 export default class MainCategory extends React.Component
 {
@@ -67,11 +67,10 @@ export default class MainCategory extends React.Component
 
     createMainCategory = () => {
         let data = {
-            title: this.state.mainCategory
+            title: this.state.mainCategory,
+            id: ""+new Date().valueOf()
         };
-        CategoryTransaction.createMainCategory(data).then((data) => data.json().then((val) => {
-            console.log(val);
-            alert("main category created");
-        })).catch((ex) => alert(ex));
+        
+        CategoryTrasaction.createMainCategory(data).then(() => { alert("Main category created") }).catch((ex) => alert(ex));
     }
 }

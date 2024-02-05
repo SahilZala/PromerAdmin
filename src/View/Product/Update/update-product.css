@@ -1,0 +1,95 @@
+
+.update-product-section{
+    
+    padding: 10px;
+}
+
+.update-product-section .update-product-form .phase1{
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.update-product-section .update-product-form .phase2{
+    display: flex;
+    text-align: right;
+}
+
+
+.update-product-section .update-product-form .update-product-title{
+    margin: 15px;
+    font-family: var(--main-font);
+    color: var(--main-color-black);
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.update-product-section .update-product-form header{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px var(--main-color-light-grey) solid;
+}
+
+
+
+
+
+.update-product-section .update-product-form section{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.update-product-section .update-product-form .product-section-style{
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.update-product-section .update-product-form .product-section-style label{
+    margin-left: 5px;
+    font-family: var(--main-font);
+    display: flex;
+    font-size: 20px;
+    text-align: center;
+    align-items: center; 
+}
+.update-product-section .update-product-form .product-section-style  #title{
+    margin-right: 5px;
+    color: white;
+    background-color: var(--main-color-black);
+    shape-outside: circle();
+    clip-path: circle();
+    padding: 10px;
+    font-size: 15px;
+    font-family: var(--main-font);
+}
+
+
+
+.update-product-section .update-product-form section #phase1{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border-right: 1px var(--main-color-light-grey) dashed;
+}
+
+.update-product-section .update-product-form section #phase2{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border-left: 1px var(--main-color-light-grey) dashed;
+}
+
+.update-product-section .update-product-form .product-section-style #product-image{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.update-product-section .update-product-form .product-section-style img{
+    margin: 5px;
+    height: 200px;
+    width: 175px;
+    
+
+}

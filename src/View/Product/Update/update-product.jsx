@@ -1,45 +1,45 @@
-import React from 'react';
-import './create-product-style.css';
+import React from "react";
+import "./update-product.css";
 import CustomeSubmitButton from '../../../Components/Buttons/cutome-submit-button';
 import CustomeClearButton from '../../../Components/Buttons/custome-clear-button';
-import CustomeLabel from '../../../Components/Labels/custome-label';
-import CustomeInputBox from '../../../Components/InputBox/custome-input-box';
-import CustomeTextareaBox from '../../../Components/InputBox/custome-textarea-box';
-// import axios from 'axios';
-import CustomeSelector from '../../../Components/Selector/custome-selection';
-// import ProductDto from '../../../Dto/product_dto';
-// import { ProductTransaction } from '../../../Transaction/product_transaction';
-import ProductImages from '../../../Transaction/product_images';
-import ProgressIndicator from '../../../Components/ProgressIndicator/progress_indicator';
-import CategoryTrasaction from '../../../Transaction/firebase/category_transaction';
-import SizeTransaction from '../../../Transaction/firebase/size_transaction';
-import ProductTrasaction from '../../../Transaction/firebase/product_transaction';
-export default class CreateProduct extends React.Component {
+import CloseIcon from '@mui/icons-material/Close';
+import CustomeInputBox from "../../../Components/InputBox/custome-input-box";
+import CustomeLabel from "../../../Components/Labels/custome-label";
+import CustomeSelector from "../../../Components/Selector/custome-selection";
+import CustomeTextareaBox from "../../../Components/InputBox/custome-textarea-box";
+import ProductImages from "../../../Transaction/product_images";
+// import { ProductTransaction } from "../../../Transaction/product_transaction";
+import CategoryTrasaction from "../../../Transaction/firebase/category_transaction";
+import SizeTransaction from "../../../Transaction/firebase/size_transaction";
+import ProductTrasaction from "../../../Transaction/firebase/product_transaction";
 
+export default class UpdateProduct extends React.Component {
     constructor(props) {
-        super(props);
+        super();
+
+        console.log(props.data);
         this.mainCategory = []
 
         this.subCategory = []
-
         this.state = {
-            articalNo: "",
-            title: '',
-            subTitle: '',
-            description: '',
-            moreInfo: '',
-            realPrice: 0.0,
-            discountedPrice: 0.0,
+            id: props.data.id,
+            articalNo: props.data.productDetails.articleNumber,
+            title: props.data.productDetails.title,
+            subTitle: props.data.productDetails.subTitle,
+            description: props.data.productDetails.description,
+            moreInfo: props.data.productDetails.moreInfo,
+            realPrice: props.data.productPricing.realPrice,
+            discountedPrice: props.data.productPricing.discountPrice,
             productImages: [],
-            productImageUrls: [],
+            productImageUrls: props.data.productImages === undefined ? [] : props.data.productImages,
             uploadProgress: {},
             gender: {
-                id: "0",
-                title: "MALE"
+                id: props.data.productVariant.gender === "MALE" ? 0 : 1,
+                title: props.data.productVariant.gender
             },
-            mainCategory: {},
-            subCategory: {},
-            productSize: {},
+            mainCategory: props.data.productVariant.mainCategory,
+            subCategory: props.data.productVariant.subCategory,
+            productSize: props.data.productVariant.size,
 
             genderList: [
                 {
@@ -54,45 +54,43 @@ export default class CreateProduct extends React.Component {
             mainCategoryList: [],
             subCategoryList: [],
             productSizeList: [],
-            brandName: "",
-            seller: "",
-            manufacturer: "",
+            brandName: props.data.productOrganization.brandName,
+            seller: props.data.productOrganization.seller,
+            manufacturer: props.data.productOrganization.manufacturer,
 
             progress: false,
 
         }
 
 
-
-
     }
+
     componentDidMount() {
 
         CategoryTrasaction.getMainandSubCategory().then((data) => {
             this.setState({
-                mainCategory: data[0].mainCategory,
                 mainCategoryList: data,
-                subCategoryList: data[0].subCategory,
-                subCategory: data[0].subCategory[0]
+                subCategoryList: this.state.mainCategory.subCategory,
             });
         });
 
-        SizeTransaction.getProductSize().then((data) => console.log(data));
+        // SizeTransaction.getProductSize().then((data) => console.log(data));
 
         SizeTransaction.getProductSize()
             .then((data) => this.setState(
                 {
                     productSizeList: data,
-                    productSize: data[0]
+                    
                 }))
             .catch((error) => console.log(" errr " + error));
 
+
+
+        //
         // ProductTransaction.getMainCategory()
         //     .then((data) => data.json().then((value) => this.setState({
-        //         mainCategory: value[0],
         //         mainCategoryList: value,
-        //         subCategoryList: value[0].subCategory,
-        //         subCategory: value[0].subCategory[0]
+        //         subCategoryList: this.state.mainCategory.subCategory,
         //     })))
         //     .catch((error) => console.log(" errr " + error));
 
@@ -100,48 +98,49 @@ export default class CreateProduct extends React.Component {
         //     .then((data) => data.json().then((value) => this.setState(
         //         {
         //             productSizeList: value,
-        //             productSize: value[0]
+
         //         })))
         //     .catch((error) => console.log(" errr " + error));
     }
+
     render() {
-        return (
-            <>
-                {this.state.progress === true ? <ProgressIndicator title="PRODUCT CREATION IS IN PROGRESS PLEASE DONT PRESSE BACK OR CHANGE TABLE...." /> : <section className='create-product-body'>
 
-                    <br />
-                    <form onReset={() => { this.setState({ productImages: [] }) }} onSubmit={this.handleSubmit} className='create-product-form'>
-                        <header>
-                            <div className='phase1'>
-                                <p className='create-product-title'>New Product</p>
-                            </div>
-                            <div className='phase2'>
-                                <CustomeClearButton type='reset' id="clear">Clear</CustomeClearButton>
-                                <CustomeSubmitButton type='submit' id="publish">Publish</CustomeSubmitButton>
-                            </div>
-                        </header>
+        return <section className="update-product-section">
+
+            <form onReset={() => { this.setState({ productImages: [] }) }} onSubmit={this.handleSubmit} className='update-product-form'>
+                <header>
+                    <div className='phase1'>
+
+                        <CloseIcon onClick={this.props.handleClose}
+                            style={{
+                                color: 'var(--main-color-black)',
+                                fontSize: '25px', cursor: 'pointer'
+                            }} />
+                        <p className='update-product-title'>Update Product</p>
+                    </div>
+                    <div className='phase2'>
+                        <CustomeClearButton type='reset' id="clear">Clear</CustomeClearButton>
+                        <CustomeSubmitButton type='submit' id="publish">Update</CustomeSubmitButton>
+                    </div>
+                </header>
+
+                <section style={{ display: 'flex' }}>
+                    <section id='phase1'>
+                        {this.productDetails()}
+                        {this.productPricing()}
+                    </section>
+                    <section id='phase2'>
+                        {this.pickImages()}
+                        {this.productVariant()}
+                        {this.productOrganization()}
 
 
-                        <section style={{ display: 'flex' }}>
-                            <section id='phase1'>
-                                {this.productDetails()}
-                                {this.productPricing()}
-                            </section>
-                            <section id='phase2'>
-                                {this.pickImages()}
-                                {this.productVariant()}
-                                {this.productOrganization()}
+                    </section>
+                </section>
 
+            </form>
 
-                            </section>
-                        </section>
-
-                    </form>
-
-                </section>}
-
-            </>
-        );
+        </section>;
     }
 
     handleSubmit = (event) => { event.preventDefault(); this.checkValidity(); }
@@ -161,30 +160,30 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='title-box'>
                 <CustomeLabel>Artical No.<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onArticalNoChange} type="number" placeholder="Artical No"></CustomeInputBox>
+                <CustomeInputBox value={this.state.articalNo} onChange={this.onArticalNoChange} type="number" placeholder="Artical No"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='title-box'>
                 <CustomeLabel>Title<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onTitleChange} type="text" placeholder="title of product"></CustomeInputBox>
+                <CustomeInputBox value={this.state.title} onChange={this.onTitleChange} type="text" placeholder="title of product"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='sub-title-box'>
                 <CustomeLabel>Sub Title<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onSubTitleChange} type="text" placeholder="sub title of product"></CustomeInputBox>
+                <CustomeInputBox value={this.state.subTitle} onChange={this.onSubTitleChange} type="text" placeholder="sub title of product"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='description-box'>
                 <CustomeLabel>Description<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeTextareaBox onChange={this.onDescriptionChange} type="text" height="100px" placeholder="describe your product in brief"></CustomeTextareaBox>
+                <CustomeTextareaBox value={this.state.description} onChange={this.onDescriptionChange} type="text" height="100px" placeholder="describe your product in brief"></CustomeTextareaBox>
             </span>
             <br /><br />
             <span id='more-info-box'>
                 <CustomeLabel>More Info</CustomeLabel>
-                <CustomeTextareaBox onChange={this.onMoreInfoChange} type="text" height="80px" placeholder="you can add more information of product"></CustomeTextareaBox>
+                <CustomeTextareaBox value={this.state.moreInfo} onChange={this.onMoreInfoChange} type="text" height="80px" placeholder="you can add more information of product"></CustomeTextareaBox>
             </span>
         </section>
     }
@@ -203,20 +202,20 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Real Price<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onRealPriceChange} type="number" placeholder="real price"></CustomeInputBox>
+                <CustomeInputBox value={this.state.realPrice} onChange={this.onRealPriceChange} type="number" placeholder="real price"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='discounted-price-box'>
                 <CustomeLabel>Discounted Price<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
+                <CustomeInputBox value={this.state.discountedPrice} onChange={this.onDiscountedPriceChange} type="number" placeholder="on price you wanted to sell"></CustomeInputBox>
             </span>
 
         </section>
     }
 
     onFileChange = (val) => {
-        var data = [];
+        var data = this.state.productImages;
 
         var prog = new Map();
         for (var v = 0; v < val.target.files.length; v++) {
@@ -224,7 +223,6 @@ export default class CreateProduct extends React.Component {
             prog.set(v, 0);
         }
 
-        console.log(prog);
         this.setState({
             productImages: data,
             uploadProgress: prog
@@ -250,9 +248,14 @@ export default class CreateProduct extends React.Component {
             </span>
             <br />
             <br />
-            {this.state.productImages.map((val) => {
-                return <img alt='' src={URL.createObjectURL(val)} />
-            })}
+            <section id="product-image">
+            {this.state.productImageUrls.map((val) => {
+                    return val.id !== undefined ? <img alt='' src={val.url} /> : <img alt='' src={URL.createObjectURL(val)} />
+                })}
+                {this.state.productImages.map((val) => {
+                    return val.id !== undefined ? <img alt='' src={val.url} /> : <img alt='' src={URL.createObjectURL(val)} />
+                })}
+            </section>
         </section>;
 
     }
@@ -272,7 +275,7 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Select gender<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data) => {
+                <CustomeSelector selected={this.state.gender} onChange={(data) => {
                     this.setState({
                         gender: data
                     });
@@ -282,7 +285,7 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Main category<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data) => this.setState({
+                <CustomeSelector selected={this.state.mainCategory} onChange={(data) => this.setState({
                     mainCategory: data,
                     subCategoryList: data.subCategory,
                     subCategory: data.subCategory[0]
@@ -292,7 +295,7 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Sub category<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data) => this.setState({
+                <CustomeSelector selected={this.state.subCategory} onChange={(data) => this.setState({
                     subCategory: data,
                 })} options={this.state.subCategoryList} />
             </span>
@@ -300,7 +303,7 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='real-price-box'>
                 <CustomeLabel>Size<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeSelector onChange={(data) => this.setState({
+                <CustomeSelector selected={this.state.productSize} onChange={(data) => this.setState({
                     productSize: data,
                 })} options={this.state.productSizeList} />
             </span>
@@ -325,19 +328,19 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='title-box'>
                 <CustomeLabel>Brand<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onBrandNameChange} type="text" placeholder="brandName"></CustomeInputBox>
+                <CustomeInputBox value={this.state.brandName} onChange={this.onBrandNameChange} type="text" placeholder="brandName"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='sub-title-box'>
                 <CustomeLabel>Seller<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onSellerChange} type="text" placeholder="seller"></CustomeInputBox>
+                <CustomeInputBox value={this.state.seller} onChange={this.onSellerChange} type="text" placeholder="seller"></CustomeInputBox>
             </span>
             <br />
             <br />
             <span id='description-box'>
                 <CustomeLabel>Manufacturer<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeTextareaBox onInvalid={this.validateManufacturer} required={true} onChange={this.onManufacturerChange} type="text" height="100px" placeholder="manufaturer details"></CustomeTextareaBox>
+                <CustomeTextareaBox value={this.state.manufacturer} onInvalid={this.validateManufacturer} required={true} onChange={this.onManufacturerChange} type="text" height="100px" placeholder="manufaturer details"></CustomeTextareaBox>
             </span>
             <br /><br />
         </section>
@@ -360,46 +363,30 @@ export default class CreateProduct extends React.Component {
         this.setState({
             progress: true
         });
-
-        ProductTrasaction.createProduct(this.state).then((data) => {
-            this.setState({
-                progress: true
+        ProductTrasaction
+            .updateProduct(this.state)
+            .then((data) => {
+                console.log(data);
+                this.setState({
+                    progress: false
+                });
+                this.uploadImages(data.id);
+            }).catch((err) => {
+                alert("" + err); this.setState({
+                    progress: false
+                });
             });
-            this.uploadImages(data.id);
-        });
-        // ProductTransaction
-        //     .createProduct(this.state)
-        //     .then((data) => {
-        //         if (data.status === 500) {
-        //             alert("Internal Server Error");
-        //             this.setState({
-        //                 progress: false
-        //             });
-        //         }
-        //         else
-        //             data.json().then((data) => {
-
-        //                 alert("product created wait for image upload ");
-        //                 this.uploadImages(data.id);
-        //             })
-        //     }).catch((err) => {
-        //         alert("" + err); this.setState({
-        //             progress: false
-        //         });
-        //     });
-
-
-
     }
 
     uploadImages(id) {
+        
         ProductImages.uploadImagesFirebaseRecu(this.state.productImages, id, 0, (val) => {
-            var list = this.state.productImageUrls;
-            list.push(val);
-            this.setState({
-                productImageUrls: list
-            });
-        }, [], () => {
+            // var list = this.state.productImageUrls;
+            // list.push(val);
+            // this.setState({
+            //     productImageUrls: list
+            // });
+        }, this.state.productImageUrls, () => {
             this.setState({
                 progress: false
             });

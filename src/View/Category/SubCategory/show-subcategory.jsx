@@ -1,8 +1,9 @@
 import React from "react";
 import "./show-subcategory.css";
 import { Create } from "@mui/icons-material";
-import CategoryTransaction from "../../../Transaction/category_transaction";
+// import CategoryTransaction from "../../../Transaction/category_transaction";
 import CircularProgress from '@mui/material/CircularProgress';
+import CategoryTrasaction from "../../../Transaction/firebase/category_transaction";
 export default class ShowSubCategory extends React.Component{
     
     constructor()
@@ -45,7 +46,7 @@ export default class ShowSubCategory extends React.Component{
                     {this.state.progress === true ? <CircularProgress/> : <></>}
                     <tbody>
                     {
-                        this.state.data.map((data,index) => data.subCategory.map((subData,ind) => this.getTableBody(data,subData,ind)))
+                        this.state.data.map((data,index) => this.getTableBody(data,index))
                     }
                     </tbody>
                 </table>
@@ -53,19 +54,19 @@ export default class ShowSubCategory extends React.Component{
         </section>);
     }
 
-    getTableBody = (mainData,data,index) => <tr key={index}>
+    getTableBody = (data,index) => <tr key={index}>
         <td style={{
             justifyContent: 'flex-start',
             flex: '1'
-        }}>{data.id}</td>
+        }}>{data.subCategory.id}</td>
         <td style={{
             justifyContent: 'center',
             flex: '3'
-        }}>{data.title}</td>
+        }}>{data.subCategory.title}</td>
         <td style={{
             justifyContent: 'center',
             flex: '3'
-        }}>{mainData.title}</td>
+        }}>{data.mainCategory.title}</td>
         <td style={{
             justifyContent: 'center',
             flex: 1,
@@ -79,22 +80,32 @@ export default class ShowSubCategory extends React.Component{
         this.setState({
             progress: true
         })
-        CategoryTransaction.getAllMainCategory().then((data) => data.json().then((val) => {
+    //     CategoryTrasaction.getSubCategory().then((data) => data.json().then((val) => {
+    //         this.setState({
+    //             data: val,
+    //             progress: false
+    //         });
+
+    //         console.log(val);
+    //     }).catch((error) => {console.log("json error "+error)
+    //     this.setState({
+    //         progress: false
+    //     })
+    // })).catch((error) => {
+    //         alert(error);
+    //         this.setState({
+    //             progress: false
+    //         })
+    //     });
+
+
+        CategoryTrasaction.getSubCategory().then((val) => {
+            console.log(val);
+
             this.setState({
                 data: val,
                 progress: false
             });
-
-            console.log(val);
-        }).catch((error) => {console.log("json error "+error)
-        this.setState({
-            progress: false
         })
-    })).catch((error) => {
-            alert(error);
-            this.setState({
-                progress: false
-            })
-        });
     }
 }
