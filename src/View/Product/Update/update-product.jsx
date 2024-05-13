@@ -49,6 +49,10 @@ export default class UpdateProduct extends React.Component {
                 {
                     id: "1",
                     title: "FEMALE"
+                },
+                {
+                    id: "",
+                    title: "UNISEX"
                 }
             ],
             mainCategoryList: [],

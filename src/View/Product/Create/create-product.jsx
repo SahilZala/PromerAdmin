@@ -49,6 +49,10 @@ export default class CreateProduct extends React.Component {
                 {
                     id: "1",
                     title: "FEMALE"
+                },
+                {
+                    id: "2",
+                    title: "UNISEX"
                 }
             ],
             mainCategoryList: [],
