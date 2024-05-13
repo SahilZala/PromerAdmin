@@ -161,7 +161,7 @@ export default class CreateProduct extends React.Component {
             <br />
             <span id='title-box'>
                 <CustomeLabel>Artical No.<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox onChange={this.onArticalNoChange} type="number" placeholder="Artical No"></CustomeInputBox>
+                <CustomeInputBox onChange={this.onArticalNoChange} type="text" placeholder="Artical No"></CustomeInputBox>
             </span>
             <br />
             <br />

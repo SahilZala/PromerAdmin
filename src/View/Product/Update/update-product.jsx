@@ -160,7 +160,7 @@ export default class UpdateProduct extends React.Component {
             <br />
             <span id='title-box'>
                 <CustomeLabel>Artical No.<span style={{ color: 'red' }}>*</span></CustomeLabel>
-                <CustomeInputBox value={this.state.articalNo} onChange={this.onArticalNoChange} type="number" placeholder="Artical No"></CustomeInputBox>
+                <CustomeInputBox value={this.state.articalNo} onChange={this.onArticalNoChange} type="text" placeholder="Artical No"></CustomeInputBox>
             </span>
             <br />
             <br />
